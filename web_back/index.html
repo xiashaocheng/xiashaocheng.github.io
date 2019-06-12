@@ -44,7 +44,7 @@
         <div class="user_center_link">
             <a href="user.html" onclick="setMenu(3,0)" target="main_frame">个人中心</a>
             <img src="images/2.jpg" alt="person">
-            <a href="#"><i class="iconfont icon-tuichu"></i> 退出</a>
+            <a href="#" id='btn_logout'><i class="iconfont icon-tuichu"></i> 退出</a>
         </div>
     </div>
 
@@ -52,6 +52,27 @@
         <iframe src="main_count.html" frameborder="0" id="main_frame" name="main_frame" frameborder="0" scrolling="auto"></iframe>
     </div>
 
+
+
+     <!-- bs的模态框 Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示框!!!</h4>
+                </div>
+                <div class="modal-body">
+                    退出失败!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script>
@@ -102,6 +123,37 @@
            }
         }
 
+    </script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+   $(function(){
+    $('#btn_logout').on('click',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'post',
+            url:'https://autumnfish.cn/big/admin/logout',
+            success:function(backData){
+               if(backData.code == 200){
+                window.location.href = "./login.html";
+            }else{
+                $('#myModal').modal({
+                                keyboard:true
+                            });
+            }
+            }
+        })
+    })
+    
+
+     /*
+            步骤:
+            1.给退出的a标签设置一个点击事件.
+                取消他的默认跳转
+            2.发送ajax请求,得到数据
+                如果退出成功,跳转到登录页面.
+            */
+   })
     </script>
 
 </body>
