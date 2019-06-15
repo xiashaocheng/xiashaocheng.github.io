@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-1.12.4.min.js"></script>
+    <!-- 导入分页的插件 -->
+    <script src="./js/jquery.twbsPagination.min.js"></script>
 </head>
 
 <body>
@@ -273,6 +275,62 @@
         $('#release_btn').click(function(){
             window.parent.setMenu(1,1);
         })
+    </script>
+
+    <script src="./js/template-web.js"></script>
+
+    <!-- 定义模板 选项 -->
+    <script id="cate" type="text/html">
+    {{each data v}}
+    <option value="{{v.id}}">{{v.name}}</option>
+    {{/each}}
+    </script>
+
+    <!-- 定义模板 文章 -->
+    <script type="text/html" id="article">
+    {{each data v}}
+    <tr>
+
+        <td>{{v.title}}</td>
+        <td>{{v.author}}</td>
+        <td>{{v.type}}</td>
+        <td class="text-center">{{v.date}}</td>
+
+
+        <td class="text-center">{{v.state}}</td>
+
+
+        <td class="text-center">
+            <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+            <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
+        </td>
+    </tr>
+    {{/each}}
+    </script>
+
+    <script>    
+     /*
+            文章类表-分类获取
+                请求地址：http://localhost:8000/admin/category_search
+                请求方式：get
+                请求参数：无
+                步骤
+                1. 打开文章列表页
+                2. 调用文章分类数据接口 获取所有的分类
+                3. 获取到之后设置到页面左上角的 下拉框中
+
+            文章列表- 分页数据获取
+                请求地址：http://localhost:8000/admin/search
+                    请求方式：get
+                    请求参数：page,perpage
+                    步骤
+                    1. 进入文章列表页之后，通过ajax获取分页文章数据
+                    2. page&perpage 第一页，每页6条
+                    3. 数据回来之后渲染到页面上 模板引擎
+
+
+        */
+
     </script>
 
 </body>

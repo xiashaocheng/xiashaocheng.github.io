@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
                     <div class="col-sm-4">
-                        <input type="text"name="username" class="form-control username" id="inputEmail3" value="李思思">
+                        <input type="text" name="username" class="form-control username" id="inputEmail3" value="李思思">
                     </div>
                 </div>
                 <div class="form-group">
@@ -36,7 +36,8 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control email" name='email' id="inputEmail3" value="lisisi@126.com">
+                        <input type="text" class="form-control email" name='email' id="inputEmail3"
+                            value="lisisi@126.com">
                     </div>
                 </div>
 
@@ -51,7 +52,8 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
                     <div class="col-sm-4">
-                        <input type="password" name="password" class="form-control password" id="inputEmail3" value="12345678">
+                        <input type="password" name="password" class="form-control password" id="inputEmail3"
+                            value="12345678">
                     </div>
                 </div>
 
@@ -74,6 +76,7 @@
             */
 
         $(function () {
+
             $.ajax({
                 type: 'get',
                 url: 'http://localhost:8000/admin/userinfo_get',
@@ -91,39 +94,59 @@
 
 
             //图像预览
-            $('#exampleInputFile').on('change',function(){
+            $('#exampleInputFile').on('change', function () {
 
                 var icon = this.files[0];
                 ////根据这个图片文件 创建一个url.
                 var url = URL.createObjectURL(icon);
 
-                $('img.user_pic').attr('src',url)
+                $('img.user_pic').attr('src', url)
 
             })
 
-             //给修改按钮设置一个点击事件,注意取消默认 跳转.
-            $('.btn-success').on('click',function(e){
-                e.preventDefault();
-                 //创建一个formData获取form表单里面的所有数据
-                 var formData = new FormData($('form')[0]);
 
-                    
+            //给修改按钮设置一个点击事件,注意取消默认 跳转.
+            $('.btn-success').on('click', function (e) {
+                e.preventDefault();
+                //创建一个formData获取form表单里面的所有数据
+                var formData = new FormData($('form')[0]);
+
+
                 $.ajax({
-                   type:'post',
-                   url:'http://localhost:8000/admin/userinfo_edit',
-                   data:formData,
-                   //下面这句话的意思是不要给我设置请求头.因为我这里发送数据使用的是formData,不需要设置请求头
-                   contentType: false,
+                    type: 'post',
+                    url: 'http://localhost:8000/admin/userinfo_edit',
+                    data: formData,
+                    //下面这句话的意思是不要给我设置请求头.因为我这里发送数据使用的是formData,不需要设置请求头
+                    contentType: false,
                     //下面这句话的意思是不要把我传递的参数转成key=value这种格式的字符串.
                     processData: false,
-                   success:function(backData){
-                    console.log(backData);
-                    if(backData.code == 200){
-                           console.log('修改成功!');
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code == 200) {
+                            console.log('修改成功!');
+
+                            $.ajax({
+                                type: 'get',
+                                url: 'http://localhost:8000/admin/userinfo_get',
+                                success: function (backData) {
+
+                                    console.log(backData);
+                                    parent.$('.user_info span').html('欢迎&nbsp;&nbsp;' + backData.data.nickname)
+                                    parent.$('.user_info img').attr('src',backData.data.user_pic)
+                                    parent.$('.user_center_link img').attr('src',backData.data.user_pic)
+
+                                }
+                            })
+
+
+
+
+
+
                         }
-                   }
+                    }
                 })
-            })  
+            })
 
         })
     </script>
