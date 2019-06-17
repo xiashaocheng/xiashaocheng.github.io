@@ -15,6 +15,7 @@
     <script src="js/jedate/js/jedate.js"></script>
     <script src="js/tinymce/js/tinymce/tinymce.min.js"></script>
     <script src="js/tinymce/js/tinymce_setup.js"></script>
+    <script src="./js/template-web.js"></script>
 </head>
 
 <body>
@@ -27,19 +28,20 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" placeholder="文章标题">
+                        <input type="text" name='title' class="form-control" id="inputEmail3" placeholder="文章标题">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <input type="file" id="exampleInputFile">
+                        <img src="" alt="" style="height: 100px"><br>
+                        <input type="file" name="cover"  id="exampleInputFile">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control">
+                        <select class="form-control" name="type">
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -53,7 +55,7 @@
                     <div class="col-sm-4">
 
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
+                            <input type="text" name="date" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button"
                                     onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
@@ -72,7 +74,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">发布</button>
+                        <button type="submit" class="btn btn-success btn-release">发布</button>
                         <button type="submit" class="btn btn-default">存为草稿</button>
                     </div>
                 </div>
@@ -80,6 +82,64 @@
         </div>
     </div>
 
+    <script id="tmp" type="text/html">
+    {{each data v}}
+    <option value="{{v.id}}">{{v.name}}</option>
+    {{/each}}
+    </script>
+
+
+    <script>
+    $(function(){
+        //文章图片预览
+        $('#exampleInputFile').on('change',function(){
+            var icon = this.files[0];
+            var url = URL.createObjectURL(icon);
+            $(this).prev().prev().attr('src',url);
+        })
+
+
+        //一进入页面,就显示所有的文字类别
+    $.ajax({
+        type:'get',
+        url:'http://localhost:8000/admin/category_search',
+        success:function(backData){
+            if(backData.code == 200){
+                //通过模板引擎把返回的数据渲染到页面
+                //调用模板引擎的方法
+                var resHtml = template('tmp',backData);
+                $('.form-control').html(resHtml);
+            }
+        }
+    })
+
+
+    //给发布一个设置一个点击事件
+    $('.btn-release').on('click',function(e){
+        e.preventDefault();
+        //创建一个formData对象
+        var formD = new FormData($('form')[0])
+        //把富文本中的内容 和state值追加到formD中
+        formD.append('content',tinyMCE.activeEditor.getContent());
+        formD.append('state','草稿');
+
+        //发送ajax请求
+        $.ajax({
+            type:'post',
+            data:formD,
+            url:'http://localhost:8000/admin/article_publish',
+            contentType:false,
+            processData:false,
+            success:function(backData){
+
+                console.log(backData);
+                
+            }
+        })
+    })
+    })
+    
+    </script>
 </body>
 
 </html>

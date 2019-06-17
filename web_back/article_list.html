@@ -394,8 +394,8 @@
         //点击筛选,发送ajax请求,获取对应类型的所有文章
         $('#btnSearch').on('click', function (e) {
             e.preventDefault();
-
             getArticle(1);
+            
         })
         //一进到页面就要筛选一次(所有分类,所有状态)
         $('#btnSearch').trigger('click');
